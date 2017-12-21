@@ -6,7 +6,7 @@ const promisify = Promise.promisify;
 const log = require('./log')(module);
 const connections = require('./connections');
 
-mongoose.connection.openUri("mongodb://admin:admin@ds161833.mlab.com:61833/express-koder").then(() => {
+mongoose.connection.openUri("mongodb://localhost/shop").then(() => {
     log.info('Connected to DB!');
 }).catch((error) => {
     log.error(error);

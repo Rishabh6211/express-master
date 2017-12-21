@@ -12,5 +12,8 @@ module.exports = {
 
     register: (req, res) => {
         RegisterService.register(req, res);
+    },
+    login: (req, res) => {
+        RegisterService.login(req, res);
     }
 };

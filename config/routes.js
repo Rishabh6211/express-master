@@ -11,10 +11,13 @@ var guard = passport.authenticate('bearer', { session: false });
 //Users Routes
 // router.get('/', UsersController.index);
 
-router.get('/', function (req, res) {
-    res.json({
-    	msg: 'API is running'
-    });
+
+router.get('/users', function (req, res) {
+    console.log("gaqgf")
+    res.json([
+    { id:1, "username":"Rishabh"  },
+    { id:2, "username":"Rahul" }
+    ]);
 });
 
 router.post('/token', oauth2.token);
@@ -34,5 +37,10 @@ router.get('/api/users/info',
 
 router.post('/api/oauth/token', oauth2.token);
 router.post('/register', RegisterController.register);
-
+router.post('/login', RegisterController.login);
+router.get('/', function (req, res) {
+    res.json({
+        msg: 'API is running'
+    });
+});
 module.exports = router;

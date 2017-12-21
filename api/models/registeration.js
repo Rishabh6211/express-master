@@ -5,13 +5,16 @@ const Schema = mongoose.Schema;
 const RegisterUsers = new Schema({
 		username: {
 			type: String,
-			unique: true
+			required:true
 		},
-		Password: {
-			type: String
+		password: {
+			type: String,
+			required:true
 		},
 		email: {
-			type:String
+			type:String,
+			unique: true,
+			required:true
 		},
 		age: {
 			type:Number
