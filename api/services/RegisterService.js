@@ -5,17 +5,23 @@
  * @description :: Server-side logic for Register users
  */
 import registerObj from '../models/registeration';
+import  bcrypt from 'bcrypt-nodejs';
+
 module.exports = {
 
     register: (req, res) => {
-       let data = req.body;
-       let email = req.body.email;
-       	if(!email || typeof email == undefined){
+       let data		= {};
+       data.username= req.body.username;
+       data.password= bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+       data.email 	= req.body.email;
+       data.age		= req.body.age;
+       data.phone	= req.body.phone;
+       	if(!data.email || typeof data.email == undefined){
        		res.json("Email is Required")
        	}else if(!data || data == undefined){
        		res.json("Something went Wrong to send data")
        	}else {
-	       	registerObj.findOne({email:email}).then((response) => {
+	       	registerObj.findOne({email:data.email}).then((response) => {
 				if(response){
 					res.json({"message":"Email Already Register ,Please Use Different Email"})
 				}
