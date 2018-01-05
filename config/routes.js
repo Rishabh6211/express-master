@@ -6,6 +6,9 @@ import RegisterController from '../api/controllers/RegisterController'
 
 //file imports
 import UsersController from '../api/controllers/UsersController';
+import StateController from '../api/controllers/StateController';
+import CategoryController from '../api/controllers/CategoryController';
+import CentersController from '../api/controllers/CentersController';
 var guard = passport.authenticate('bearer', { session: false });
 
 //Users Routes
@@ -38,6 +41,10 @@ router.get('/api/users/info',
 router.post('/api/oauth/token', oauth2.token);
 router.post('/register', RegisterController.register);
 router.post('/login', RegisterController.login);
+router.get('/states', StateController.findStates);
+router.get('/category', CategoryController.findCategory);
+router.post('/savecenter', CentersController.SaveCenter);
+router.get('/getcenter', CentersController.GetCenter);
 router.get('/', function (req, res) {
     res.json({
         msg: 'API is running'
