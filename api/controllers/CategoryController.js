@@ -16,7 +16,7 @@ module.exports = {
 	  		}
 	  		else
 	  		{
-	  			res.status(200).json(category)
+	  			res.status(200).json({"data":category})
 	  		}
 	  	}).catch((err) => {res.json(err)})
 	}

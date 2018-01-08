@@ -14,6 +14,13 @@ module.exports = {
         CenterService.SaveCenter(req, res);
     },
     GetCenter: (req, res) => {
-        CenterService.Get(req, res);
+        CenterService.GetCenter(req, res);
+    },
+    SearchCenter: (req,res) => {
+    	CenterService.SearchCenter(req, res);
+    },
+    DisplayCenter: (req,res) => {
+    	CenterService.DisplayCenter(req, res);
     }
+    
 };

@@ -44,7 +44,9 @@ router.post('/login', RegisterController.login);
 router.get('/states', StateController.findStates);
 router.get('/category', CategoryController.findCategory);
 router.post('/savecenter', CentersController.SaveCenter);
-router.get('/getcenter', CentersController.GetCenter);
+router.post('/getcenter', CentersController.GetCenter);
+router.get('/search', CentersController.SearchCenter);
+router.get('/display', CentersController.DisplayCenter);
 router.get('/', function (req, res) {
     res.json({
         msg: 'API is running'
