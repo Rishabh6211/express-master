@@ -9,6 +9,7 @@ import UsersController from '../api/controllers/UsersController';
 import StateController from '../api/controllers/StateController';
 import CategoryController from '../api/controllers/CategoryController';
 import CentersController from '../api/controllers/CentersController';
+import TrainerController from '../api/controllers/TrainerController';
 var guard = passport.authenticate('bearer', { session: false });
 
 //Users Routes
