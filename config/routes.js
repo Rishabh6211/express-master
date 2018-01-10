@@ -10,6 +10,7 @@ import StateController from '../api/controllers/StateController';
 import CategoryController from '../api/controllers/CategoryController';
 import CentersController from '../api/controllers/CentersController';
 import TrainerController from '../api/controllers/TrainerController';
+import LikeController from '../api/controllers/LikeController';
 var guard = passport.authenticate('bearer', { session: false });
 
 //Users Routes
@@ -48,6 +49,8 @@ router.post('/savecenter', CentersController.SaveCenter);
 router.post('/getcenter', CentersController.GetCenter);
 router.get('/search', CentersController.SearchCenter);
 router.get('/display', CentersController.DisplayCenter);
+router.post('/contactcenter', CentersController.ContactCenter);
+router.post('/profilelike', LikeController.profileLike);
 router.get('/', function (req, res) {
     res.json({
         msg: 'API is running'

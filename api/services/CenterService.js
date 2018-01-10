@@ -5,6 +5,19 @@
  * @description :: Server-side logic for Save Centers
  */
 import centerObj from '../models/Center';
+import nodemailer from 'nodemailer';
+import smtpTransport from 'nodemailer-smtp-transport'; 
+import registerObj from '../models/registeration';
+var transport = nodemailer.createTransport(smtpTransport({
+    service: "Gmail",
+    host: 'smtp.gmail.com',
+    sendmail: true,
+    //port:557,*/
+    auth: {
+        user: "fitness24fitness@gmail.com",
+        pass: "Fitness@123"
+    }
+}));
 
 module.exports = {
 	SaveCenter: (req,res) => {
@@ -88,5 +101,63 @@ module.exports = {
        			}
        		}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
        	}
-	} 
+	},
+	ContactCenter: (req,res) => {
+		var userId = req.body.userId
+		var centerId = req.body.centerId;
+		let mailOptions = {};
+
+		if(!centerId || typeof centerId == undefined){
+			res.status(400).json("Center Id is Required")
+		}else if(!userId || typeof userId == undefined){
+			res.status(400).json("User Id is Required")
+		}
+		else{
+			registerObj.findOne({_id:userId}).then((result) => {
+			
+				if(!result || result == undefined || result.length == 0)
+				{
+					res.status(404).json({"message":"Data not found"})
+				}
+				else{
+
+					centerObj.findOne({_id:centerId}).then((data)=>{
+						
+						if(!data || data == undefined || data.length == 0)
+						{
+						res.status(404).json({"message":"Data not found"})
+						}else {
+
+							 mailOptions={
+					            from:"dsvvian.rishabh@gmail.com",
+					            to : data.email,
+					            subject : "Someone Wants to contact you",
+					            html : "Name:"+result.username+"Contact:"+result.phone+"Email"+result.email+"<br> he is a user of fitness24 and want to contact you.<br>Please Reply him"
+		        			}
+
+		        			transport.sendMail(mailOptions, function (err, info) {
+
+		        				console.log("hello",err)
+		        				if(err){
+		        					res.status(400).json({"message":"Something went wrong with Email, Have you enterd wrong Email", "error":err.toString()})
+		        				}
+		        				else{
+		        					console.log("info",info)
+		        					res.status(200).json({"data":info, "message":"Your Contact Request Successfully Sent"})
+		        				}
+		        			})
+		        			console.log("mailOptions",mailOptions)
+		        		
+		        			//console.log("info",info);
+						//res.status(200).json({"data":data})
+
+						}
+					}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
+
+				}
+			})
+			
+		}
+	}
+
 }

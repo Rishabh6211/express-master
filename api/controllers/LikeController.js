@@ -7,16 +7,16 @@
 
 
 
-import CenterService from '../services/CenterService';
+import LikeService from '../services/LikeService';
 module.exports = {
 
-    SaveCenter: (req, res) => {
-        CenterService.SaveCenter(req, res);
+    profileLike: (req, res) => {
+        LikeService.profileLike(req, res);
     },
-    GetCenter: (req, res) => {
+    /*GetCenter: (req, res) => {
         CenterService.GetCenter(req, res);
-    },
-    SearchCenter: (req,res) => {
+    }*/
+ /*   SearchCenter: (req,res) => {
     	CenterService.SearchCenter(req, res);
     },
     DisplayCenter: (req,res) => {
@@ -24,6 +24,6 @@ module.exports = {
     },
     ContactCenter: (req,res) => {
         CenterService.ContactCenter(req, res);
-    }
+    }*/
     
 };
