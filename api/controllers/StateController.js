@@ -6,22 +6,22 @@
  */
 import stateObj from '../models/State';
 module.exports = {
-	  
+
+	
 	  findStates : (req,res) =>
 	  {
-	  	stateObj.find({}).then((err,states) =>
+	  	stateObj.find({}).then((states) =>
 	  	{
-	  		if(err)
+	  		if(!states)
 	  		{
-	  			res.status(400).json(err)
-	  			//res.json("Something went wrong",err)
+	  			res.status(400).json({"message":"data not found"})
 	  		}
 	  		else
 	  		{
-	  			res.status(200).json(states)
-	  			//res.json({"data":states, status:200})
+	  			res.status(200).json({"data":states})
+	  			
 	  		}
-	  	}).catch((err) => {res.json(err)})
+	  	}).catch((err) => {res.json(err.toString())})
 	  }
 };
 

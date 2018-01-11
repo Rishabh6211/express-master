@@ -8,11 +8,11 @@ import categoryObj from '../models/Category';
 module.exports = {
 	findCategory : (req,res) =>
 	{
-	  	categoryObj.find({}).then((err,category) =>
+	  	categoryObj.find({}).then((category) =>
 	  	{
-	  		if(err)
+	  		if(!category)
 	  		{
-	  			res.status(400).json(err)
+	  			res.status(400).json({"message":"data not found"})
 	  		}
 	  		else
 	  		{

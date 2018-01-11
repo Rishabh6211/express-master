@@ -13,9 +13,9 @@ module.exports = {
     profileLike: (req, res) => {
         LikeService.profileLike(req, res);
     },
-    /*GetCenter: (req, res) => {
-        CenterService.GetCenter(req, res);
-    }*/
+    getLike: (req, res) => {
+        LikeService.getLike(req, res);
+    }
  /*   SearchCenter: (req,res) => {
     	CenterService.SearchCenter(req, res);
     },
