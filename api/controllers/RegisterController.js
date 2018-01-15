@@ -15,5 +15,14 @@ module.exports = {
     },
     login: (req, res) => {
         RegisterService.login(req, res);
+    },
+    updateUser: (req,res) => {
+    	RegisterService.updateUser(req, res);
+    },
+    forgotPassword: (req,res) => {
+    	RegisterService.forgotPassword(req, res);
+    },
+    resetPassword : (req,res) => {
+    	RegisterService.resetPassword(req, res);
     }
 };

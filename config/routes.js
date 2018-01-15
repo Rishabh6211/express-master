@@ -50,6 +50,7 @@ router.post('/savecenter', CentersController.SaveCenter);
 router.post('/getcenter', CentersController.GetCenter);
 router.get('/search', CentersController.SearchCenter);
 router.get('/display', CentersController.DisplayCenter);
+router.post('/image', CentersController.ImageUpload);
 router.post('/contactcenter', CentersController.ContactCenter);
 router.post('/profilelike', LikeController.profileLike);
 router.get('/getLike/:centerId', LikeController.getLike);

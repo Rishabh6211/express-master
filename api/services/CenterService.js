@@ -9,6 +9,8 @@ import nodemailer from 'nodemailer';
 import smtpTransport from 'nodemailer-smtp-transport'; 
 import mg from 'nodemailer-mailgun-transport';
 import registerObj from '../models/registeration';
+import formidable  from 'formidable';
+import fs from 'fs';
 /*var transport = nodemailer.createTransport(smtpTransport({
     service: "Gmail",
     host: 'smtp.gmail.com',
@@ -28,32 +30,52 @@ const auth = {
 var nodemailerMailgun = nodemailer.createTransport(mg(auth));		
 module.exports = {
 	SaveCenter: (req,res) => {
-		let data	= {};
-		data.name	 = req.body.name;
-		data.title	 = req.body.title;
-		data.detail	 = req.body.detail;
-		data.image	 = req.body.image;
-		data.discount= req.body.discount;
-		data.location= req.body.location;
-		data.address = req.body.address;
-		data.category= req.body.category;
-		data.state	 = req.body.state;
-		data.city	 = req.body.city;
-		data.services= req.body.services;
-		data.phone	 = req.body.phone;
-		data.email	 = req.body.email;
-		data.fb		 = req.body.fb;
-		data.instaa	 = req.body.instaa;
-		data.youtube = req.body.youtube;
+		let form = new formidable.IncomingForm();
+		form.uploadDir = 'assets/images/center';
+		form.keepExtensions = true;
+		form.multiples = true;
+		form.parse(req, function(err, fields, files) {
+			let fileType = files.image.type.split('/').pop();
+			let size 	 = files.image.size;
+			if(fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg')
+			{
 
-   		centerObj(data).save(data).then((data)=>{
-       		if(!data){
-       			res.status(400).json("Something went wrong")
-       		}else{
-           		res.status(200).json({"data":data, "message":"Center Resiteration Successfully"})
-       		}
-       	}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
-       	  
+				if(size<= 1000000){
+					let data	= {};
+					data.name	 = fields.name;
+					data.title	 = fields.title;
+					data.detail	 = fields.detail;
+					data.image	 = files.image.name;
+					data.discount= fields.discount;
+					data.location= fields.location;
+					data.address = fields.address;
+					data.category= fields.category;
+					data.state	 = fields.state;
+					data.city	 = fields.city;
+					data.services= fields.services;
+					data.phone	 = fields.phone;
+					data.email	 = fields.email;
+					data.fb		 = fields.fb;
+					data.instaa	 = fields.instaa;
+					data.youtube = fields.youtube;
+
+			   		centerObj(data).save(data).then((data)=>{
+			       		if(!data){
+			       			res.status(400).json("Something went wrong")
+			       		}else{
+			           		res.status(200).json({"data":data, "message":"Center Resiteration Successfully"})
+			       		}
+			       	}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
+				}
+				else{
+					res.status(400).json({"message":"Image size is too large please upload below 15mb"})
+				}
+			}
+			else{
+				res.status(400).json({"message":"invalid file extension , Please Upload jpg,jpeg,png"})
+			}
+			
+       	})  
 	},
 	GetCenter: (req,res) => {
 		let state	 = req.body.state;
@@ -159,6 +181,52 @@ module.exports = {
 			})
 			
 		}
-	}
+	},
+	ImageUpload : (req, res)  => {
+        let form = new formidable.IncomingForm();
+            form.uploadDir = 'assets/images/user';
+        //form.uploadDir = baseUrl //set upload directory
+        form.keepExtensions = true; //keep file extension
+        form.multiples = true;
+        form.parse(req, function(err, fields, files) {
+            console.log("---------------------",files.image.name)
+            console.log("fields-***********************",fields)
+        let fileType = files.image.type.split('/').pop();
+        	console.log("fileType",fileType);
+		let size 	 = files.image.size;
+		console.log("size",size);
+		if(fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg')
+		{
+			if(size<= 1000000){
+		        let data	= {};
+				data.name	 = fields.name;
+				data.title	 = fields.title;
+				data.detail	 = fields.detail;
+				data.image	 = files.image.name;
+				data.discount= fields.discount;
+				data.location= fields.location;
+				data.address = fields.address;
+				data.category= fields.category;
+				data.state	 = fields.state;
+				data.city	 = fields.city;
+				data.services= fields.services;
+				data.phone	 = fields.phone;
+				data.email	 = fields.email;
+				data.fb		 = fields.fb;
+				data.instaa	 = fields.instaa;
+				data.youtube = fields.youtube;
+				console.log("data",data);
+			}
+			else{
+				res.status(400).json({"message":"file size 1 mb to 10mb"})
+			}
+		}		
+		else{
+			res.status(400).json({"message":"invalid file extension or file size 1 mb to 10mb , Please Upload jpg,jpeg,png"})
+		}
+
+        });
+    }
+
 
 }

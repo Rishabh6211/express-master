@@ -1,0 +1,5 @@
+function (err) {
+								//form.uploadDir = './public/images/'+data.type;
+								if (err) throw err;
+								console.log('The file has been saved!');
+							}
