@@ -13,7 +13,10 @@ const Schema = mongoose.Schema;
 const Users = new Schema({
 		username: {
 			type: String,
-			unique: true,
+			required: true
+		},
+		name:{
+			type: String,
 			required: true
 		},
 		hashedPassword: {
@@ -24,11 +27,48 @@ const Users = new Schema({
 			type: String,
 			required: true
 		},
+		email: {
+			type:String,
+			unique: true,
+			required:true
+		},
+		age: {
+			type:Number
+		},
+		phone: {
+			type:Number
+		},
 		created: {
 			type: Date,
 			default: Date.now
-		}
+		},
+	  	roles: {
+            type: 'string',
+            enum: ['SA', 'A','U'],
+            defaultsTo: 'U'
+            
+        },
+	  	isDeleted:{
+	  		type:'boolean',
+	  		defaultsTo:false
+	  	},
+	  	isVerified: {
+            type: 'string',
+            enum: ['Y','N'],
+            defaultsTo: 'N'
+        },
+        code:{
+        	type:'string'
+        }
 	});
+
+Users.methods.toJSON = function() {
+    var obj = this.toObject();
+    delete obj.hashedPassword;
+    delete obj.salt;
+    delete obj.__v;
+    return obj;
+};
 
 Users.methods.encryptPassword = function(password) {
 return crypto.createHmac('sha1', this.salt).update(password).digest('hex');

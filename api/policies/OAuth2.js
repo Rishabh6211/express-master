@@ -19,37 +19,43 @@ const errFn = (cb, err) => {
 // Destroys any old tokens and generates a new access and refresh token
 const generateTokens = (data, done) => {
 
-	// curries in `done` callback so we don't need to pass it
-    var errorHandler = errFn.bind(undefined, done),
-	    refreshToken,
-	    refreshTokenValue,
-	    token,
-	    tokenValue;
+	
+    let id = data.userId;
+    
+    User.findOne({_id:id}).then((user) => {
+        // curries in `done` callback so we don't need to pass it
+        let errorHandler = errFn.bind(undefined, done),
+            refreshToken,
+            refreshTokenValue,
+            token,
+            tokenValue;
 
-    RefreshToken.remove(data, errorHandler);
-    AccessToken.remove(data, errorHandler);
+        RefreshToken.remove(data, errorHandler).then((ref) => {
+            AccessToken.remove(data, errorHandler).then((acc) => {
+                tokenValue = crypto.randomBytes(32).toString('hex');
+                refreshTokenValue = crypto.randomBytes(32).toString('hex');
 
-    tokenValue = crypto.randomBytes(32).toString('hex');
-    refreshTokenValue = crypto.randomBytes(32).toString('hex');
+                data.token = tokenValue;
+                token = new AccessToken(data);
 
-    data.token = tokenValue;
-    token = new AccessToken(data);
+                data.token = refreshTokenValue;
 
-    data.token = refreshTokenValue;
-    refreshToken = new RefreshToken(data);
-
-    refreshToken.save(errorHandler);
-
-    token.save((err) => {
-    	if (err) {
-			// log.error(err);
-    		return done(err);
-    	}
-    	done(null, tokenValue, refreshTokenValue, {
-    		'expires_in': 3600
-    	});
+                refreshToken = new RefreshToken(data);
+                refreshToken.save(errorHandler).then((reftok) => {
+                    token.save().then((result) => {
+                        done(null, tokenValue, refreshTokenValue, {
+                            'expires_in': 3600,
+                            user: user,
+                            success: true
+                        });
+                    }).catch((err) => {
+                        return done(err);
+                    });
+                });
+            });
+        });
     });
-};
+}
 
 // Exchange username & password for access token.
 aserver.exchange(oauth2orize.exchange.password((client, username, password, scope, done) => {

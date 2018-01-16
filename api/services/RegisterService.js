@@ -4,61 +4,92 @@
  * @author      :: Rishabh Gupta
  * @description :: Server-side logic for Register users
  */
-import registerObj from '../models/registeration';
+//import registerObj from '../models/registeration';
 import  bcrypt from 'bcrypt-nodejs';
+const Users = require('../models/Users');
+const uuid = require('uuid');
+const crypto = require('crypto');
+import nodemailer from 'nodemailer';
+import mg from 'nodemailer-mailgun-transport';
+import constant from '../../config/constant'
 
+const auth = {    
+  auth: {        
+    api_key: constant.api_key,        
+    domain:  constant.domain    
+  }
+};
+var nodemailerMailgun = nodemailer.createTransport(mg(auth));
 module.exports = {
 
     register: (req, res) => {
-       let data		= {};
-       data.username= req.body.username;
-       data.password= bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-       data.email 	= req.body.email;
-       data.age		= req.body.age;
-       data.phone	= req.body.phone;
+    	console.log ("body",req.body)
+      let rand=Math.floor((Math.random() * 100) + 54);
+      let link="http://localhost:1337/verify?id="+rand;
+      let mailOptions = {};
+      let data				    = {};
+      let salt     		    = uuid.v4();
+      let hashedPassword  = crypto.createHmac('sha1', salt).update(req.body.password).digest('hex');
+      data.name           = req.body.username
+      data.username		    = req.body.email;
+      data.hashedPassword = hashedPassword;
+      data.salt			      = salt;
+      data.email 			    = data.username;
+      data.age				    = req.body.age;
+      data.phone			    = req.body.phone;
+       console.log ("data",data)
        	if(!data.email || typeof data.email == undefined){
-       		res.json("Email is Required")
+       		res.json({"message":"Email is Required"})
        	}else if(!data || data == undefined){
-       		res.json("Something went Wrong to send data")
+       		res.json({"message":"Something went Wrong to send data"})
        	}else {
-	       	registerObj.findOne({email:data.email}).then((response) => {
+	       	Users.findOne({email:data.email}).then((response) => {
 				if(response){
 					res.json({"message":"Email Already Register ,Please Use Different Email"})
 				}
 				else{    
-			       	registerObj(data).save(data).then((data)=>{
+			       	Users(data).save(data).then((data)=>{
 			       		if(!data){
-			       			res.json("Something went wrong")
+			       			res.json({"message":"Something went wrong"})
 			       		}else{
-			           		res.json({"data":data, status:200, "message":"Resiteration Successfully"})
+                   mailOptions={
+                      from:constant.from,
+                      to : data.email,
+                      subject : "Fitness24 : Please confirm your account",
+                      html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
+                  }
+
+                  nodemailerMailgun.sendMail(mailOptions, function (err, info) {
+
+                    if(err){
+                      res.status(400).json({"message":"Something went wrong with Email, Have you enterd wrong Email", "error":err.toString()})
+                    }
+                    else{
+      
+                      res.json({"data":data, status:200, "message":"Resiteration Successfully","message1":"Your verification request has been sent to your registerd Email Please Verify it"})
+                    }
+                  })
+			           		
 			       		}
-			       	}).catch((err) => {res.json(err)})
+			       	}).catch((err) => {res.json({"message":err.toString()})})
 			    }
-		    }).catch((err) => {res.json(err)})
-		}
+		    }).catch((err) => {res.json({"message":err.toString()})})
+		  }
     },
 
-    login: (req,res) => {
-    	let data	  = {};
-    	data.username = req.body.username;
-    	data.email 	  =	req.body.email;
-    	data.password = req.body.password;
-    	if(!data || data == undefined){
-    		res.json({"message":"Email and Password is Required "})
-    	}else{
-	    	registerObj.findOne(data).then((result) =>{
-	    		if(result){
-	    			console.log("Successfully Login")
-	    			res.json({"data":result,"message":"Successfully Login"})
-	    		}
-	    		else{
-	    			console.log("User is not Register")
-	    			res.json({"message":"User is not Register"})
-	    		}
-	    	}).catch((err) => {res.json(err)})
-	    }
-
-
+    verify : (req,res) => {
+        console.log("inside verification verification");
+        let code = req.param('id')
+        Users.findOne({code:code}).then((data) =>
+        {
+          Users.update({code:code},{isVerified:'Y'}).then((data) =>
+          {
+              delete data.code;
+              res.send("successfully verified");
+          }).catch((err) => {res.json({"message":err.toString()})})
+            
+        }).catch((err) => {res.json({"message":err.toString()})})
+        
     }
 
 };

@@ -24,5 +24,8 @@ module.exports = {
     },
     resetPassword : (req,res) => {
     	RegisterService.resetPassword(req, res);
-    }
+    },
+    verify : (req,res) => {
+        RegisterService.verify(req, res);
+    },
 };

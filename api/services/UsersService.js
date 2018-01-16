@@ -1,9 +1,9 @@
 /**
  * UsersService
  *
- * @author      :: Kamal Dolikay
+ * @author      :: Rishabh Gupta
  * @description :: Server-side logic for managing users
- * @email       :: kamaldolikay@gmail.com
+ * @email       :: dsvvian.rishabh@gmail.com
  */
 
 module.exports = {

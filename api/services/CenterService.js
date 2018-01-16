@@ -8,7 +8,7 @@ import centerObj from '../models/Center';
 import nodemailer from 'nodemailer';
 import smtpTransport from 'nodemailer-smtp-transport'; 
 import mg from 'nodemailer-mailgun-transport';
-import registerObj from '../models/registeration';
+const Users = require('../models/Users');
 import formidable  from 'formidable';
 import fs from 'fs';
 /*var transport = nodemailer.createTransport(smtpTransport({
@@ -59,13 +59,27 @@ module.exports = {
 					data.instaa	 = fields.instaa;
 					data.youtube = fields.youtube;
 
-			   		centerObj(data).save(data).then((data)=>{
-			       		if(!data){
-			       			res.status(400).json("Something went wrong")
-			       		}else{
-			           		res.status(200).json({"data":data, "message":"Center Resiteration Successfully"})
-			       		}
-			       	}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
+					if(!data){
+						res.status(400).json({"message":"Please enterd missing field"})
+					}
+					else{
+						centerObj.findOne({email:data.email}).then((response) => {
+							console.log("response",response)
+							if(response){
+								res.json({"message":"Center Already Register with this email if any error please contact us"})
+							}
+							else{
+								centerObj(data).save(data).then((result)=>{
+						       		if(!data){
+						       			res.status(400).json("Something went wrong")
+						       		}else{
+						           		res.status(200).json({"data":result, "message":"Center Resiteration Successfully"})
+						       		}
+						       	}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
+							}
+						}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
+					}
+			   		
 				}
 				else{
 					res.status(400).json({"message":"Image size is too large please upload below 15mb"})
@@ -135,14 +149,14 @@ module.exports = {
 		var userId = req.body.userId
 		var centerId = req.body.centerId;
 		let mailOptions = {};
-
+		
 		if(!centerId || typeof centerId == undefined){
 			res.status(400).json("Center Id is Required")
 		}else if(!userId || typeof userId == undefined){
 			res.status(400).json("User Id is Required")
 		}
 		else{
-			registerObj.findOne({_id:userId}).then((result) => {
+			Users.findOne({_id:userId}).then((result) => {
 			
 				if(!result || result == undefined || result.length == 0)
 				{

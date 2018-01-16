@@ -41,10 +41,11 @@ router.get('/api/users/info',
     });
 });
 
-router.post('/api/oauth/token', oauth2.token);
+router.post('/api/oauth/login', oauth2.token);
 router.post('/register', RegisterController.register);
+router.get('/verify', RegisterController.verify);
 router.post('/login', RegisterController.login);
-router.get('/states', StateController.findStates);
+router.get('/states',guard, StateController.findStates);
 router.get('/category', CategoryController.findCategory);
 router.post('/savecenter', CentersController.SaveCenter);
 router.post('/getcenter', CentersController.GetCenter);

@@ -8,6 +8,7 @@ import passport from 'passport';
 
 //file imports
 require('./config/mongoose');
+import routes from './config/routes';
 require('./api/policies/Auth');
 // var oauth2 = require('./api/policies/oauth2');
 const log = require('./config/log')(module);
@@ -31,7 +32,6 @@ app.use(function(req, res, next) {
 });
 app.use('/', routes);
 // app.use('/api/oauth/token', oauth2.token);
-import routes from './config/routes';
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404);

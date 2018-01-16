@@ -6,7 +6,6 @@
 
  */
 import likeObj from '../models/Like';
-import registerObj from '../models/registeration';
 module.exports = {
 
     profileLike :(req,res) =>{

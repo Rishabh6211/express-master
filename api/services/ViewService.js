@@ -6,7 +6,7 @@
 
  */
 import viewObj from '../models/View';
-import registerObj from '../models/registeration';
+
 module.exports = {
 
 	profileView: (req,res) => {

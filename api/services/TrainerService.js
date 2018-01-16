@@ -7,7 +7,7 @@
 import nodemailer from 'nodemailer';
 import smtpTransport from 'nodemailer-smtp-transport'; 
 import trainerObj from '../models/Trainer';
-import registerObj from '../models/registeration';
+const Users = require('../models/Users');
 var transport = nodemailer.createTransport(smtpTransport({
     service: "Gmail",
     host: 'smtp.gmail.com',
@@ -97,7 +97,7 @@ module.exports = {
 			res.status(400).json("Traner Id is Required")
 		}
 		else{
-			registerObj.find({_id:userId}).then((result) => {
+			Users.find({_id:userId}).then((result) => {
 				if(!result || result == undefined || result.length == 0)
 				{
 					res.status(404).json({"message":"Data not found"})
