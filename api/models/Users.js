@@ -45,17 +45,17 @@ const Users = new Schema({
 	  	roles: {
             type: 'string',
             enum: ['SA', 'A','U'],
-            defaultsTo: 'U'
+            default: 'U'
             
         },
 	  	isDeleted:{
 	  		type:'boolean',
-	  		defaultsTo:false
+	  		default:false
 	  	},
 	  	isVerified: {
             type: 'string',
             enum: ['Y','N'],
-            defaultsTo: 'N'
+            default: 'N'
         },
         code:{
         	type:'string'

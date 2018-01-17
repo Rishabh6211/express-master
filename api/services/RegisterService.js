@@ -23,7 +23,6 @@ var nodemailerMailgun = nodemailer.createTransport(mg(auth));
 module.exports = {
 
     register: (req, res) => {
-    	console.log ("body",req.body)
       let rand=Math.floor((Math.random() * 100) + 54);
       let link="http://localhost:1337/verify?id="+rand;
       let mailOptions = {};
@@ -37,6 +36,7 @@ module.exports = {
       data.email 			    = data.username;
       data.age				    = req.body.age;
       data.phone			    = req.body.phone;
+      data.code           = rand;
        console.log ("data",data)
        	if(!data.email || typeof data.email == undefined){
        		res.json({"message":"Email is Required"})
@@ -78,7 +78,7 @@ module.exports = {
     },
 
     verify : (req,res) => {
-        console.log("inside verification verification");
+  
         let code = req.param('id')
         Users.findOne({code:code}).then((data) =>
         {
@@ -90,6 +90,30 @@ module.exports = {
             
         }).catch((err) => {res.json({"message":err.toString()})})
         
+    },
+    updateUser : (req,res) => {
+      let Id = req.body.userId;
+
+      let data   = {};
+      data.$set = { 
+                    name      : req.body.name,
+                    email     : req.body.email,
+                    age       : req.body.age,
+                    phone     : req.body.phone                     
+                  };
+
+      if(!Id || typeof Id == undefined){
+          res.json({"message":"User is Required"})
+      }else{
+          Users.findByIdAndUpdate(Id, data, {new:true}, (err,result) =>{
+            if(err){
+              res.status(400).json({"message":"data not updated", "error":err.toString()})
+            }
+            else{
+              res.status(200).json({"message":"data successfully updated"})
+            }
+          })
+      }
     }
 
 };
