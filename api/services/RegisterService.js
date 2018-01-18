@@ -21,7 +21,14 @@ const auth = {
 };
 var nodemailerMailgun = nodemailer.createTransport(mg(auth));
 module.exports = {
-
+/*---------------------------------------------
+ * @Date:        2-01-18
+ * @Method :     ADD User(post)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     ADD User with verified mail
+ * @using:       Mailgun for send verification link
+----------------------------------------------*/
     register: (req, res) => {
       let rand=Math.floor((Math.random() * 100) + 54);
       let link="http://localhost:1337/verify?id="+rand;
@@ -76,7 +83,13 @@ module.exports = {
 		    }).catch((err) => {res.json({"message":err.toString()})})
 		  }
     },
-
+/*---------------------------------------------
+ * @Date:        17-01-18
+ * @Method :     Verify User(post)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Verification of users
+----------------------------------------------*/
     verify : (req,res) => {
   
         let code = req.param('id')
@@ -91,8 +104,15 @@ module.exports = {
         }).catch((err) => {res.json({"message":err.toString()})})
         
     },
+/*---------------------------------------------
+ * @Date:        17-01-18
+ * @Method :     Update User(put)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Update existing users
+----------------------------------------------*/
     updateUser : (req,res) => {
-      let Id = req.body.userId;
+      let Id = req.query.userId;
 
       let data   = {};
       data.$set = { 
@@ -113,6 +133,83 @@ module.exports = {
               res.status(200).json({"message":"data successfully updated"})
             }
           })
+      }
+    },
+/*---------------------------------------------
+ * @Date:        18-01-18
+ * @Method :     forgot password(post)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     reset password Link send to users registerd mail
+----------------------------------------------*/
+    forgotPassword : (req,res) => {
+      let email = req.body.email;
+      let mailOptions = {};
+      if(!email || typeof email == undefined){
+        res.json({"message":"email is Required"})
+      }
+      else{
+        Users.findOne({email:email}).then((data) => {
+          if(!data){
+            res.status(404).json({"message":"Email not found"})
+          }
+          else{
+            let verifyURL = "http://localhost:1337/resetpassword?userId="+data.id;
+            mailOptions={
+                  from:constant.from,
+                  to : data.email,
+                  subject : "Fitness24 : Reset Password",
+                  html : "Hello,<br> Please Click on the link to reset your password.<br><a href="+verifyURL+">Click here to Reset</a>"
+              }
+
+            nodemailerMailgun.sendMail(mailOptions, function (err, info) {
+
+              if(err){
+                res.status(400).json({"message":"Something went wrong with Email, Have you enterd wrong Email", "error":err.toString()})
+              }
+              else{
+
+                res.status(200).json({"message":"Mail has been sent Successfully"})
+              }
+            })
+          }
+        }).catch((err) => {res.json({"message":err.toString()})})
+      }
+
+    },
+/*---------------------------------------------
+ * @Date:        18-01-18
+ * @Method :     Reset password(put)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     reset password of users
+----------------------------------------------*/
+    resetPassword:(req,res) => {
+      let password = req.body.password;
+      let confirmPassword = req.body.confirmPassword;
+      if(!password || typeof password == undefined){
+        res.status(400).json({"message":"Password is require"})
+      }
+      else if(!confirmPassword || typeof confirmPassword == undefined) {
+        res.status(400).json({"message":"confirm password is require"})
+      }
+      else if(password !== confirmPassword){
+        res.status(400).json({"message":"password and confirm Password does not match"})
+      }
+      else {
+        let Id                = req.query.userId;
+        let salt              = uuid.v4();
+        let encryptedPassword = crypto.createHmac('sha1', salt).update(password).digest('hex');
+        let data = { $set: { hashedPassword: encryptedPassword, salt: salt } };
+        Users.findByIdAndUpdate(Id, data, {new:true}, (err,result) =>{
+          if(err){
+            res.status(400).json({"message":"Password not updated", "error":err.toString()})
+          }
+          else{
+            res.status(200).json({"message":"Password successfully updated"})
+          }
+        })
+
       }
     }
 

@@ -45,6 +45,8 @@ router.post('/api/oauth/login', oauth2.token);
 router.post('/register', RegisterController.register);
 router.get('/verify', RegisterController.verify);
 router.put('/updateuser', RegisterController.updateUser);
+router.put('/resetpassword', RegisterController.resetPassword);
+router.post('/forgotpassword', RegisterController.forgotPassword);
 router.post('/login', RegisterController.login);
 router.get('/states', StateController.findStates);
 router.get('/category', CategoryController.findCategory);
