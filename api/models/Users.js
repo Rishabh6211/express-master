@@ -38,6 +38,9 @@ const Users = new Schema({
 		phone: {
 			type:Number
 		},
+		image:{
+  			type: String,
+  		},
 		created: {
 			type: Date,
 			default: Date.now

@@ -25,8 +25,9 @@ module.exports = {
     ContactCenter: (req,res) => {
         CenterService.ContactCenter(req, res);
     },
-    ImageUpload: (req,res) => {
-        CenterService.ImageUpload(req,res);
+    EditCenter : (req,res) => {
+        CenterService.EditCenter(req, res);
     }
+    
     
 };

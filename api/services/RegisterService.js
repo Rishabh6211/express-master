@@ -5,14 +5,15 @@
  * @description :: Server-side logic for Register users
  */
 //import registerObj from '../models/registeration';
-import  bcrypt from 'bcrypt-nodejs';
+import bcrypt from 'bcrypt-nodejs';
 const Users = require('../models/Users');
 const uuid = require('uuid');
 const crypto = require('crypto');
 import nodemailer from 'nodemailer';
 import mg from 'nodemailer-mailgun-transport';
 import constant from '../../config/constant'
-
+var mongoose = require('mongoose');
+import formidable  from 'formidable';
 const auth = {    
   auth: {        
     api_key: constant.api_key,        
@@ -211,6 +212,73 @@ module.exports = {
         })
 
       }
-    }
+    },
+/*---------------------------------------------
+ * @Date:        18-01-18
+ * @Method :     delete user (put)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     soft delete of users
+----------------------------------------------*/
+  deleteUser : (req,res) => {
+
+    let userId = mongoose.Types.ObjectId(req.body.userId);
+    let data = { $set: { isDeleted: true } };
+    Users.findByIdAndUpdate(userId, data, (err,result) =>{
+      if(err){
+        res.status(400).json({"message":"Something went wrong", "error":err.toString()})
+      }
+      else if(!result){
+        res.status(400).json({"message":"User not deleted"})
+      }
+      else{
+        res.status(200).json({"message":"User Successfully Deleted"})
+      }
+    })
+  },
+  /*---------------------------------------------
+ * @Date:        18-01-18
+ * @Method :     upload user (post)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     uploading the image for user profile
+----------------------------------------------*/
+  ImageUpload : (req, res)  => {
+      let form = new formidable.IncomingForm();
+      form.uploadDir = 'assets/images/user';
+      //form.uploadDir = baseUrl //set upload directory
+      form.keepExtensions = true; //keep file extension
+      form.multiples = true;
+      form.parse(req, function(err, fields, files) {
+        let fileType = files.image.type.split('/').pop();
+        let size   = files.image.size;
+        if(fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg')
+        {
+          if(size<= 1000000){
+            let userId = mongoose.Types.ObjectId(fields.userId);
+            let uploadImage  = files.image.name;
+            let data = { $set: { image: uploadImage } };
+            Users.findByIdAndUpdate(userId, data, (err,result) =>{
+              if(err){
+                res.status(400).json({"message":"Something went wrong", "error":err.toString()})
+              }
+              else if(!result){
+                res.status(400).json({"message":"Image not upload"})
+              }
+              else{
+                res.status(200).json({"message":"Image Successfully uploaded"})
+              }
+            })
+          }
+          else{
+            res.status(400).json({"message":"file size 1 mb to 10mb"})
+          }
+        }   
+        else{
+          res.status(400).json({"message":"invalid file extension or file size 1 mb to 10mb , Please Upload jpg,jpeg,png"})
+        }
+
+    });
+  }
 
 };

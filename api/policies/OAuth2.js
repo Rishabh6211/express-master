@@ -69,13 +69,22 @@ aserver.exchange(oauth2orize.exchange.password((client, username, password, scop
 		if (!user || !user.checkPassword(password)) {
 			return done(null, false);
 		}
+		if (user.isDeleted === true) {            
+			/*let sms = {                
+				body: 'Dear ' + user.firstname + ' your account have been disabled',                
+				to: user.mobile            
+				};            
+				SharedService.twilio(sms);   */         
+				return done({ success: false, message: 'User is Disabled please contact us' });    
 
-		let model = {
-			userId: user.userId,
-			clientId: client.clientId
-		};
+		}else{
+			let model = {
+				userId: user.userId,
+				clientId: client.clientId
+			};
 
 		generateTokens(model, done);
+		}
 	});
 
 }));

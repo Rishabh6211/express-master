@@ -28,4 +28,10 @@ module.exports = {
     verify : (req,res) => {
         RegisterService.verify(req, res);
     },
+    deleteUser : (req,res) => {
+        RegisterService.deleteUser(req, res);
+    },
+    ImageUpload: (req,res) => {
+        RegisterService.ImageUpload(req,res);
+    }
 };

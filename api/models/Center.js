@@ -15,6 +15,10 @@ const CenterSchema = new Schema({
   			type: String,
   			required:true
   		},
+      userId:{
+        type:Schema.Types.ObjectId,
+        ref: 'users'
+      },
   		image:{
   			type: String,
   			required:true

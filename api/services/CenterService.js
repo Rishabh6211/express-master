@@ -45,6 +45,7 @@ module.exports = {
 					data.name	 = fields.name;
 					data.title	 = fields.title;
 					data.detail	 = fields.detail;
+					data.userId	 = fields.userId;
 					data.image	 = files.image.name;
 					data.discount= fields.discount;
 					data.location= fields.location;
@@ -195,52 +196,8 @@ module.exports = {
 			})
 			
 		}
-	},
-	ImageUpload : (req, res)  => {
-        let form = new formidable.IncomingForm();
-            form.uploadDir = 'assets/images/user';
-        //form.uploadDir = baseUrl //set upload directory
-        form.keepExtensions = true; //keep file extension
-        form.multiples = true;
-        form.parse(req, function(err, fields, files) {
-            console.log("---------------------",files.image.name)
-            console.log("fields-***********************",fields)
-        let fileType = files.image.type.split('/').pop();
-        	console.log("fileType",fileType);
-		let size 	 = files.image.size;
-		console.log("size",size);
-		if(fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg')
-		{
-			if(size<= 1000000){
-		        let data	= {};
-				data.name	 = fields.name;
-				data.title	 = fields.title;
-				data.detail	 = fields.detail;
-				data.image	 = files.image.name;
-				data.discount= fields.discount;
-				data.location= fields.location;
-				data.address = fields.address;
-				data.category= fields.category;
-				data.state	 = fields.state;
-				data.city	 = fields.city;
-				data.services= fields.services;
-				data.phone	 = fields.phone;
-				data.email	 = fields.email;
-				data.fb		 = fields.fb;
-				data.instaa	 = fields.instaa;
-				data.youtube = fields.youtube;
-				console.log("data",data);
-			}
-			else{
-				res.status(400).json({"message":"file size 1 mb to 10mb"})
-			}
-		}		
-		else{
-			res.status(400).json({"message":"invalid file extension or file size 1 mb to 10mb , Please Upload jpg,jpeg,png"})
-		}
-
-        });
-    }
+	}
+	
 
 
 }
