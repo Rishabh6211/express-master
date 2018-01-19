@@ -16,14 +16,5 @@ module.exports = {
     getLike: (req, res) => {
         LikeService.getLike(req, res);
     }
- /*   SearchCenter: (req,res) => {
-    	CenterService.SearchCenter(req, res);
-    },
-    DisplayCenter: (req,res) => {
-    	CenterService.DisplayCenter(req, res);
-    },
-    ContactCenter: (req,res) => {
-        CenterService.ContactCenter(req, res);
-    }*/
     
 };

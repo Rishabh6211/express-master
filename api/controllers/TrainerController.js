@@ -19,8 +19,5 @@ module.exports = {
     SearchTrainer: (req,res) => {
     	TrainerService.SearchTrainer(req, res);
     }
-   /* DisplayCenter: (req,res) => {
-    	CenterService.DisplayCenter(req, res);
-    }*/
     
 };

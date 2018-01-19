@@ -46,22 +46,22 @@ const Users = new Schema({
 			default: Date.now
 		},
 	  	roles: {
-            type: 'string',
+            type: String,
             enum: ['SA', 'A','U'],
             default: 'U'
             
         },
 	  	isDeleted:{
-	  		type:'boolean',
+	  		type: Boolean,
 	  		default:false
 	  	},
 	  	isVerified: {
-            type: 'string',
+            type: String,
             enum: ['Y','N'],
             default: 'N'
         },
         code:{
-        	type:'string'
+        	type:String
         }
 	});
 

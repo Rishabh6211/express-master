@@ -40,7 +40,7 @@ router.get('/api/users/info',
         scope: req.authInfo.scope
     });
 });
-
+//user routes
 router.post('/api/oauth/login', oauth2.token);
 router.post('/register', RegisterController.register);
 router.get('/verify', RegisterController.verify);
@@ -50,15 +50,23 @@ router.post('/forgotpassword', RegisterController.forgotPassword);
 router.put('/deleteuser', RegisterController.deleteUser);
 router.post('/login', RegisterController.login);
 router.put('/image', RegisterController.ImageUpload);
+//state routes
 router.get('/states', StateController.findStates);
+//category routes
 router.get('/category', CategoryController.findCategory);
+//center routes
 router.post('/savecenter', CentersController.SaveCenter);
 router.post('/getcenter', CentersController.GetCenter);
 router.get('/search', CentersController.SearchCenter);
+router.put('/editcenter', CentersController.EditCenter);
+router.put('/deletecenter', CentersController.DeleteCenter);
+router.put('/verifycenter', CentersController.VerifyCenter);
 router.get('/display', CentersController.DisplayCenter);
 router.post('/contactcenter', CentersController.ContactCenter);
+//like routes
 router.post('/profilelike', LikeController.profileLike);
 router.get('/getLike/:centerId', LikeController.getLike);
+//view routes
 router.post('/profileview', ViewController.profileView);
 router.get('/', function (req, res) {
     res.json({

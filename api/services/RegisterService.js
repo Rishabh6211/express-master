@@ -4,7 +4,7 @@
  * @author      :: Rishabh Gupta
  * @description :: Server-side logic for Register users
  */
-//import registerObj from '../models/registeration';
+
 import bcrypt from 'bcrypt-nodejs';
 const Users = require('../models/Users');
 const uuid = require('uuid');

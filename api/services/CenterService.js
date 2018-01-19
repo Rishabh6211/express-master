@@ -10,6 +10,7 @@ import smtpTransport from 'nodemailer-smtp-transport';
 import mg from 'nodemailer-mailgun-transport';
 const Users = require('../models/Users');
 import formidable  from 'formidable';
+var mongoose = require('mongoose');
 import fs from 'fs';
 /*var transport = nodemailer.createTransport(smtpTransport({
     service: "Gmail",
@@ -29,6 +30,13 @@ const auth = {
 };
 var nodemailerMailgun = nodemailer.createTransport(mg(auth));		
 module.exports = {
+	/*---------------------------------------------
+ * @Date:        10-01-18
+ * @Method :     ADD Center(post)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     ADD Center 
+----------------------------------------------*/
 	SaveCenter: (req,res) => {
 		let form = new formidable.IncomingForm();
 		form.uploadDir = 'assets/images/center';
@@ -92,6 +100,13 @@ module.exports = {
 			
        	})  
 	},
+/*---------------------------------------------
+ * @Date:        10-01-18
+ * @Method :     Get Center(get)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Get the center list
+----------------------------------------------*/
 	GetCenter: (req,res) => {
 		let state	 = req.body.state;
 		let city 	 = req.body.city;
@@ -113,6 +128,13 @@ module.exports = {
 			}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
 		}
 	},
+/*---------------------------------------------
+ * @Date:        11-01-18
+ * @Method :     Search Center(get)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Search the center 
+----------------------------------------------*/
 	SearchCenter: (req,res) => {
 		let search = req.query.search;
 		let query = {};
@@ -132,8 +154,15 @@ module.exports = {
 			}
 		}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
 	},
+/*---------------------------------------------
+ * @Date:        11-01-18
+ * @Method :     Search Center(get)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Display the center 
+----------------------------------------------*/
 	DisplayCenter : (req,res) =>{
-		let centerId = req.param('centerId');
+		let centerId = req.query.centerId;
 		if(!centerId || typeof centerId == undefined){
    			res.status(400).json("centerId is Required")
        	}else {
@@ -146,6 +175,13 @@ module.exports = {
        		}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
        	}
 	},
+/*---------------------------------------------
+ * @Date:        12-01-18
+ * @Method :     Search Center(post)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Contact toparticular center 
+----------------------------------------------*/
 	ContactCenter: (req,res) => {
 		var userId = req.body.userId
 		var centerId = req.body.centerId;
@@ -196,8 +232,100 @@ module.exports = {
 			})
 			
 		}
+	},
+/*---------------------------------------------
+ * @Date:        19-01-18
+ * @Method :     Edit Center(put)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Update the information of the center 
+----------------------------------------------*/
+	EditCenter :(req,res) =>{
+		let userId = req.body.userId;
+		if(!userId || typeof userId == undefined){
+			res.status(400).json("User is Required")
+		}
+		else {
+			Users.findOne({_id:userId}).then((data)=> {
+				if(!data){
+					res.status(400).json({"message":"User not found"})
+				}else {
+					let centerId = req.query.centerId;
+					let data	= {};
+					data.$set = { 
+	                    name      : req.body.name,
+	                    title	  : req.body.title,
+						detail	  : req.body.detail,
+						discount  : req.body.discount,
+						location  : req.body.location,
+						address   : req.body.address,
+						services  : req.body.services,
+	                    email     : req.body.email,
+	                    phone     : req.body.phone,
+	                    fb		  : req.body.fb,
+						instaa	  : req.body.instaa,
+						youtube   : req.body.youtube                
+	                };
+	                centerObj.findByIdAndUpdate(centerId, data, (err,result) =>{
+				      if(err){
+				        res.status(400).json({"message":"Something went wrong", "error":err.toString()})
+				      }
+				      else if(!result){
+				        res.status(400).json({"message":"Information not updated"})
+				      }
+				      else{
+				        res.status(200).json({"message":"Successfully Updated"})
+				      }
+				    })
+				}
+			})
+		}
+	},
+/*---------------------------------------------
+ * @Date:        19-01-18
+ * @Method :     Delete Center(put)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Delete the center 
+----------------------------------------------*/
+	DeleteCenter : (req,res) => {
+
+	    let centerId = mongoose.Types.ObjectId(req.query.centerId);
+	    let data = { $set: { isDeleted: true } };
+	    centerObj.findByIdAndUpdate(centerId, data, (err,result) =>{
+	      if(err){
+	        res.status(400).json({"message":"Something went wrong", "error":err.toString()})
+	      }
+	      else if(!result){
+	        res.status(400).json({"message":"Center is not deleted"})
+	      }
+	      else{
+	        res.status(200).json({"message":"Center is Successfully Deleted"})
+	      }
+	    })
+  	},
+/*---------------------------------------------
+ * @Date:        19-01-18
+ * @Method :     Verified Center(put)
+ * Created By:   Rishabh Gupta
+ * Modified On:  -
+ * @Purpose:     Verified the center 
+----------------------------------------------*/
+	VerifyCenter: (req,res) => {
+	    let centerId = mongoose.Types.ObjectId(req.query.centerId);
+	    let data = { $set: { isVerified: true } };
+	    centerObj.findByIdAndUpdate(centerId, data, (err,result) =>{
+	      if(err){
+	        res.status(400).json({"message":"Something went wrong", "error":err.toString()})
+	      }
+	      else if(!result){
+	        res.status(400).json({"message":"Center is not Verify"})
+	      }
+	      else{
+	        res.status(200).json({"message":"Center is Successfully Verify"})
+	      }
+	    }) 
 	}
-	
 
 
 }

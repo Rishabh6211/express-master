@@ -27,6 +27,12 @@ module.exports = {
     },
     EditCenter : (req,res) => {
         CenterService.EditCenter(req, res);
+    },
+    DeleteCenter : (req,res) => {
+        CenterService.DeleteCenter(req, res);
+    },
+    VerifyCenter : (req,res) => {
+        CenterService.VerifyCenter(req, res);
     }
     
     
