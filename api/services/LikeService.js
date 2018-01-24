@@ -6,6 +6,18 @@
 
  */
 import likeObj from '../models/Like';
+var FCM = require('fcm-push');
+
+var serverKey = 'AIzaSyDadfRO4w2kulYNEwI03zXOAI1nxsYsvhs';
+var fcm = new FCM(serverKey);
+
+var message = {
+    to: 'csLTs_MhpLg:APA91bGakF8EUhL0L970DPQByKtDgu3SNfK3_-iJThnGJRnAivRlCySjT-54bM57RVcvDUfs5fUT-fO0I9aAY5b7EisaC4hzO3NaAX3hYZqNfto5EekZoLKKpGBifIAea3EQ3hucA9XE', // required fill with device token or topics
+    notification: {
+        title: 'Fitness24',
+        body: 'hello someone liked your profile'
+    }
+};
 module.exports = {
 
     profileLike :(req,res) =>{
@@ -34,7 +46,14 @@ module.exports = {
 			else{
 				 likeObj.create(json)
 				 .then(success=>{
-					res.status(200).json({"message":"successfully like"})
+				 	fcm.send(message).then(function(response){
+				 			res.status(200).json({"message":"successfully like"})
+					        console.log("Successfully sent with response: ", response);
+					}).catch(function(err){
+					        console.log("Something has gone wrong!");
+					        console.error(err);
+					})
+					//res.status(200).json({"message":"successfully like"})
 				    
 				 })
 			}
