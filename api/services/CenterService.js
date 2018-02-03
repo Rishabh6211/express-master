@@ -45,12 +45,13 @@ module.exports = {
 		form.parse(req, function(err, fields, files) {
 			let fileType = files.image.type.split('/').pop();
 			let size 	 = files.image.size;
-			if(fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg')
+			if(fileType == 'jpg' || fileType == 'png' || fileType == 'jpeg' || fileType == 'PNG')
 			{
 
 				if(size<= 1000000){
 					let data	= {};
 					data.name	 = fields.name;
+					data.image	 = files.image.name;
 					data.title	 = fields.title;
 					data.detail	 = fields.detail;
 					data.userId	 = fields.userId;
@@ -67,7 +68,7 @@ module.exports = {
 					data.fb		 = fields.fb;
 					data.instaa	 = fields.instaa;
 					data.youtube = fields.youtube;
-
+					
 					if(!data){
 						res.status(400).json({"message":"Please enterd missing field"})
 					}
@@ -325,6 +326,16 @@ module.exports = {
 	        res.status(200).json({"message":"Center is Successfully Verify"})
 	      }
 	    }) 
+	},
+	getAllCenter:(req,res) => {
+		centerObj.find({}).then((result)=>{
+			if(!result || result.length == undefined){
+				res.status(400).json({"message":"Data not found"})
+			}
+			else{
+				res.status(200).json({"data":result})
+			}
+		})
 	}
 
 

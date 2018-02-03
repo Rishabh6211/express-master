@@ -4,37 +4,37 @@ const Schema = mongoose.Schema;
 
 const CenterSchema = new Schema({
 		name:{
-			type: String,
-			required:true
+			type: String
+			//required:true
 		},
     title:{
-    	type: String,
-    	required:true
+    	type: String
+    	//required:true
     },
 		detail:{
-			type: String,
-			required:true
+			type: String
+			//required:true
 		},
     userId:{
       type:Schema.Types.ObjectId,
       ref: 'users'
     },
 		image:{
-			type: String,
-			required:true
+			type: String
+			//required:true
 		},
 		discount:{
 			type: Number,
-			decimal:true,
-			required:true
+			decimal:true
+			//required:true
 		},
 		location:{
-			type: String,
-			required:true
+			type: String
+			//required:true
 		},
     address:{
-      type: String,
-      required:true
+      type: String
+      //required:true
     },
     category:{
     	type: String
@@ -68,9 +68,8 @@ const CenterSchema = new Schema({
       default:false
     },
     isVerified: {
-      type: String,
-      enum: ['Y','N'],
-      default: 'N'
+      type: Boolean,
+      default: false
     },
     created: {
     	type: Date,

@@ -32,14 +32,14 @@ module.exports = {
 		data.fb		 = req.body.fb;
 		data.instaa	 = req.body.instaa;
 		data.youtube = req.body.youtube;
-		//data.lattitude = req.body.lattitude;
-		//data.longitude= req.body.longitude;
+		data.lattitude = req.body.lattitude;
+		data.longitude= req.body.longitude;
 
-		/*if(!data.lattitude || typeof data.lattitude == undefined){
+		if(!data.lattitude || typeof data.lattitude == undefined){
    			res.status(400).json("lattitude is Required")
        	}else if(!data.longitude || typeof data.longitude == undefined) {
        		res.status(400).json("lattitude is Required")
-       	}else {*/
+       	}else {
 	   		trainerObj(data).save(data).then((data)=>{
 	       		if(!data){
 	       			res.status(400).json("Something went wrong")
@@ -47,7 +47,7 @@ module.exports = {
 	           		res.status(200).json({"data":data, "message":"Center Resiteration Successfully"})
 	       		}
 	       	}).catch((err) => {res.status(500).json({"message":"Something went wrong with server", "error":err.toString()})})
-       	//}
+       	}
 	},
 	GetTrainer: (req,res) => {
 		let state	 = req.body.state;

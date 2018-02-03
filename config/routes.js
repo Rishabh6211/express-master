@@ -57,6 +57,7 @@ router.get('/category', CategoryController.findCategory);
 //center routes
 router.post('/savecenter', CentersController.SaveCenter);
 router.post('/getcenter', CentersController.GetCenter);
+router.get('/getallcenter', CentersController.getAllCenter);
 router.get('/search', CentersController.SearchCenter);
 router.put('/editcenter', CentersController.EditCenter);
 router.put('/deletecenter', CentersController.DeleteCenter);

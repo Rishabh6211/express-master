@@ -43,14 +43,14 @@ const TrainorSchema = new Schema({
  	youtube:{
  		type: String
  	},
-  /*lattitude:{
+  lattitude:{
     type: Number, 
     required:true
   },
   longitude:{
     type: Number,
     required:true
-  }*/
+  },
   created: {
   	type: Date,
   	default: Date.now

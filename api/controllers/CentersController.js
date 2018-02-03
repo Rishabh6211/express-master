@@ -33,6 +33,9 @@ module.exports = {
     },
     VerifyCenter : (req,res) => {
         CenterService.VerifyCenter(req, res);
+    },
+    getAllCenter : (req,res) => {
+        CenterService.getAllCenter(req,res);
     }
     
     
